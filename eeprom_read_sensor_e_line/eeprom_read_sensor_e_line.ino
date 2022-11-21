@@ -4,7 +4,7 @@
 
 #define black 900
 
-
+int address = 0;
 Motors_c  motors;
 LineSensor_c sensors;
 float e_line;
@@ -23,8 +23,6 @@ bool lineDetected(float sensor_value){
 
 void setup() {
   sensors.enableIRLEDs();
-  
-
 }
 
 void loop() {
@@ -36,30 +34,20 @@ void loop() {
   float e_line = sensors.getLineError();
   Serial.println(e_line); //原本就是-0.08
 
-  // all sensors in the white floor. just move forward.
-  if(!lineDetected(left_sensor) && !lineDetected(centre_sensor) && !lineDetected(right_sensor)){
-    Serial.println(" moving forward to find the line!");
-    motors.setMotors(20,20);
-  }
+  struct SENSOR{
+    unsigned long left;
+    unsigned long centre;
+    unsigned long right;
+    float e_line;
+  };
 
-  // if any of the sensors detect the sensors.
-  if(lineDetected(left_sensor) || lineDetected(centre_sensor) || lineDetected(right_sensor)){
-    // delay(20);
-    // turn pwm is scaled by e_line [-1.0, 1.0], e_line>0 turn left, e_line<0 turn right
-    float speed = turn_pwm * (e_line);
-    // Serial.println(speed);
-    float straight_value = 0.1;
-    // set the motor speed
+  SENSOR sensor_value = {left_sensor, centre_sensor, right_sensor, e_line};
 
-    // if (e_line > straight_value) {//turn right
-    //   motors.setMotors(0,speed);
-    //   Serial.println("Turn right");
-    // }
-    
-    // else if (e_line < -straight_value) {//turn left
-    //   motors.setMotors(-speed,0);      
-    //   Serial.println("Turn left");
-    // }
+  address = address + sizeof(sensor_value);
+  EEPROM.put(address, sensor_value);
+
+  float speed = turn_pwm * (e_line);
+  float straight_value = 0.1;
     if(abs(e_line) > straight_value){
       motors.setMotors(-speed, speed);
       Serial.print(speed);
@@ -69,10 +57,7 @@ void loop() {
       Serial.println("Move forward");
       motors.setMotors(20, 20);
     }
-    
-    delay(50);
 
-  }
 
 
 

@@ -10,8 +10,6 @@
 #define EMIT 11
 #define NB_LS_PINS 3
 
-
-
 // Class to operate the linesensor(s).
 class LineSensor_c {
   public:
@@ -172,18 +170,8 @@ class LineSensor_c {
       // Serial.print(",");
       // Serial.println(sensor_read[2]);
       // delay(10);
-    struct SENSOR{
-      unsigned long left;
-      unsigned long centre;
-      unsigned long right;
-      float e_line;
-    };
-
-    SENSOR sensor_value = {sensor_read[0], sensor_read[1], sensor_read[2], getLineError()};
-
-    address = address + sizeof(sensor_value);
-    EEPROM.put(address, sensor_value);
     }
+
 
 };
 

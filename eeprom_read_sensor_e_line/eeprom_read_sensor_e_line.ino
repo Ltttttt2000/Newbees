@@ -1,3 +1,4 @@
+#include<EEPROM.h>
 #include "motor.h"
 #include "linesensor.h"
 

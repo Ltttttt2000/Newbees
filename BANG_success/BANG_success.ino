@@ -6,6 +6,7 @@
 // Change these two values!!
 float turn_pwm = 90;  // the sensible max pwm for rotation
 float init_speed = 23;
+float changespeed = 15;  // change this speed to record success rate
 
 
 Motors_c  motors;
@@ -65,16 +66,6 @@ void loop() {
   
 
   float speed = turn_pwm * (e_line);
-  float straight_value = 0.1;
-    if(abs(e_line) > straight_value){
-      motors.setMotors(-speed, speed);
-    }
-    else {//move forward
-      // Serial.println("Move forward");
-      motors.setMotors(init_speed, init_speed);
-    }
-
-
-
+  motors.setMotors(changespeed-speed, changespeed+speed);
 
 }
